@@ -1,0 +1,46 @@
+# Python/cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+
+# Training artifacts
+training/cog_video_training/models/**
+!training/cog_video_training/models/
+!training/cog_video_training/models/CogVideoX-5b-I2V/
+!training/cog_video_training/models/CogVideoX-5b-I2V/README.md
+training/cog_video_training/outputs/
+training/cog_video_training/logs/
+training/cog_video_training/.cache/
+
+# Datasets and generated data
+coaf_dataset_24_25/**
+!coaf_dataset_24_25/
+!coaf_dataset_24_25/README.md
+!coaf_dataset_24_25/composed/
+!coaf_dataset_24_25/composed/v6_depth_track_rgb_640x480_from_640_local_paths/
+!coaf_dataset_24_25/composed/v6_depth_track_rgb_640x480_from_640_local_paths/.gitkeep
+!coaf_dataset_24_25/composed/v6_depth_track_rgb_640x480_one_sample_overfit/
+!coaf_dataset_24_25/composed/v6_depth_track_rgb_640x480_one_sample_overfit/.gitkeep
+!coaf_dataset_24_25/state_norm_stats.pt.placeholder
+!coaf_dataset_24_25/action_norm_stats.pt.placeholder
+
+# Large model/data file types
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.npy
+*.npz
+*.mp4
+*.avi
+*.mov
+*.png
+*.jpg
+*.jpeg
+*.parquet
+*.tar
+*.zip
