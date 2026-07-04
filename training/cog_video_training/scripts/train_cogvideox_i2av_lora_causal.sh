@@ -31,9 +31,18 @@ if [[ ! -f "${MODEL_PATH}/model_index.json" ]]; then
   exit 1
 fi
 
-if [[ ! -f "${STATE_NORM_STATS}" ]]; then
-  echo "Missing state norm stats at ${STATE_NORM_STATS}" >&2
-  exit 1
+S0_COND_TOKENS="${S0_COND_TOKENS:-0}"
+NEED_STATE_NORM_STATS=0
+if [[ "${S0_COND_TOKENS}" != "0" || "${I2AV_LAYOUT:-legacy}" != "v6" || "${DIRECT_ACTION_HEAD:-0}" == "1" ]]; then
+  NEED_STATE_NORM_STATS=1
+fi
+STATE_ARGS=()
+if [[ "${NEED_STATE_NORM_STATS}" == "1" ]]; then
+  if [[ -z "${STATE_NORM_STATS:-}" || ! -f "${STATE_NORM_STATS}" ]]; then
+    echo "Missing required state norm stats at ${STATE_NORM_STATS:-unset}" >&2
+    exit 1
+  fi
+  STATE_ARGS=(--state_norm_stats "${STATE_NORM_STATS}")
 fi
 
 for required_file in videos.txt images.txt prompt.txt validation.json state_paths.txt action_paths.txt; do
@@ -126,9 +135,15 @@ if [[ -n "${RESUME_FROM_CHECKPOINT}" && "${RESUME_FROM_CHECKPOINT}" != "none" ]]
   RESUME_ARGS=(--resume_from_checkpoint "${RESUME_FROM_CHECKPOINT}")
 fi
 ACTION_ARGS=()
-if [[ -n "${ACTION_NORM_STATS:-}" ]]; then
-  if [[ ! -f "${ACTION_NORM_STATS}" ]]; then
-    echo "Missing action norm stats at ${ACTION_NORM_STATS}" >&2
+NEED_ACTION_NORM_STATS=0
+if [[ "${DIRECT_ACTION_HEAD:-0}" == "1" ]]; then
+  NEED_ACTION_NORM_STATS=1
+elif [[ "${I2AV_LAYOUT:-legacy}" != "v6" && -n "${ACTION_NORM_STATS:-}" ]]; then
+  NEED_ACTION_NORM_STATS=1
+fi
+if [[ "${NEED_ACTION_NORM_STATS}" == "1" ]]; then
+  if [[ -z "${ACTION_NORM_STATS:-}" || ! -f "${ACTION_NORM_STATS}" ]]; then
+    echo "Missing required action norm stats at ${ACTION_NORM_STATS:-unset}" >&2
     exit 1
   fi
   ACTION_ARGS=(--action_norm_stats "${ACTION_NORM_STATS}")
@@ -207,7 +222,7 @@ fi
   --nccl_timeout "${NCCL_TIMEOUT:-7200}" \
   --temporal_causal_attention \
   --enable_i2av \
-  --state_norm_stats "${STATE_NORM_STATS}" \
+  "${STATE_ARGS[@]}" \
   "${ACTION_ARGS[@]}" \
   --lambda_sa "${LAMBDA_SA:-0.1}" \
   --lambda_s "${LAMBDA_S:-1.0}" \
@@ -217,7 +232,7 @@ fi
   --lambda_decoded_state "${LAMBDA_DECODED_STATE:-0.0}" \
   --lambda_decoded_action "${LAMBDA_DECODED_ACTION:-0.0}" \
   --sa_per_frame "${SA_PER_FRAME:-8}" \
-  --s0_cond_tokens "${S0_COND_TOKENS:-0}" \
+  --s0_cond_tokens "${S0_COND_TOKENS}" \
   --i2av_layout "${I2AV_LAYOUT:-legacy}" \
   --action_chunk_alignment "${ACTION_CHUNK_ALIGNMENT}" \
   --pose_pixel_frames "${POSE_PIXEL_FRAMES:-25}" \

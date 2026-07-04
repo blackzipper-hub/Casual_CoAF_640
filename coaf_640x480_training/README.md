@@ -46,8 +46,6 @@ The wrappers expect these paths to exist, but do not copy them:
 ```text
 coaf_dataset_24_25/composed/v6_depth_track_rgb_640x480_from_640_local_paths
 coaf_dataset_24_25/composed/v6_depth_track_rgb_640x480_one_sample_overfit
-coaf_dataset_24_25/state_norm_stats.pt
-coaf_dataset_24_25/action_norm_stats.pt
 training/cog_video_training/models/CogVideoX-5b-I2V
 ```
 
@@ -82,6 +80,9 @@ LOAD_TENSORS=1
 
 State files may still appear in dataset manifests and output metadata for
 compatibility, but state0 is not appended to the model prompt condition.
+`state_norm_stats.pt` and `action_norm_stats.pt` are not required by this
+no-state0 v6 track path. They are only needed for legacy S0-conditioned or
+state/action loss branches.
 
 ## Jobs
 

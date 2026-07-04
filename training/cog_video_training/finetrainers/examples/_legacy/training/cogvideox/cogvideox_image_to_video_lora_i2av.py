@@ -373,8 +373,9 @@ def get_text_embed_dim(transformer: CogVideoXTransformer3DModel) -> int:
 def main(args):
     if not args.enable_i2av:
         raise ValueError("cogvideox_image_to_video_lora_i2av.py requires --enable_i2av")
-    if not args.state_norm_stats:
-        raise ValueError("I2AV training requires --state_norm_stats")
+    needs_state_norm_stats = args.s0_cond_tokens > 0 or args.i2av_layout != "v6" or args.direct_action_head
+    if needs_state_norm_stats and not args.state_norm_stats:
+        raise ValueError("This I2AV training mode requires --state_norm_stats")
     if not args.temporal_causal_attention:
         raise ValueError("I2AV training requires --temporal_causal_attention")
     if args.report_to == "wandb" and args.hub_token is not None:
@@ -554,7 +555,7 @@ def main(args):
             )
     track_modules = TrackModules(hidden_dim=hidden_dim, num_steps=args.pose_pixel_frames) if args.i2av_layout == "v6" else None
     i2av_aux = I2AVAuxModules(sa_tokenizer, s0_encoder, direct_action_modules, track_modules)
-    norm_stats = torch.load(args.state_norm_stats, map_location="cpu")
+    norm_stats = torch.load(args.state_norm_stats, map_location="cpu") if args.state_norm_stats else None
     action_norm_stats = torch.load(args.action_norm_stats, map_location="cpu") if args.action_norm_stats else None
     track_norm_stats = torch.load(args.track_norm_stats, map_location="cpu") if args.track_norm_stats else None
     if args.i2av_layout == "v6" and track_norm_stats is None:

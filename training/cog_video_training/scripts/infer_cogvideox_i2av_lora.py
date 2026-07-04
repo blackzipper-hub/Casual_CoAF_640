@@ -1406,7 +1406,7 @@ def main() -> None:
     parser.add_argument("--train_data_root", type=Path)
     parser.add_argument("--lora_dir", required=True, type=Path)
     parser.add_argument("--output_dir", required=True, type=Path)
-    parser.add_argument("--state_norm_stats", required=True, type=Path)
+    parser.add_argument("--state_norm_stats", type=Path)
     parser.add_argument("--action_norm_stats", type=Path)
     parser.add_argument("--gripper_continuous_action", action="store_true")
     parser.add_argument("--sa_denoise_loss", action="store_true")
@@ -1598,10 +1598,18 @@ def main() -> None:
         direct_action_head=args.direct_action_head,
     )
 
-    norm_stats = torch.load(args.state_norm_stats, map_location="cpu")
+    if s0_encoder.num_tokens > 0:
+        if args.state_norm_stats is None:
+            raise ValueError("This checkpoint uses S0 condition tokens and requires --state_norm_stats.")
+        norm_stats = torch.load(args.state_norm_stats, map_location="cpu")
+    else:
+        norm_stats = {}
+    needs_action_norm_stats = args.action_norm_stats is not None and (
+        args.direct_action_head or args.i2av_layout != "v6"
+    )
     args.action_norm_stats_payload = (
         torch.load(args.action_norm_stats, map_location="cpu", weights_only=False)
-        if args.action_norm_stats is not None
+        if needs_action_norm_stats
         else None
     )
     generator = torch.Generator(device="cuda" if torch.cuda.is_available() else "cpu").manual_seed(args.seed)

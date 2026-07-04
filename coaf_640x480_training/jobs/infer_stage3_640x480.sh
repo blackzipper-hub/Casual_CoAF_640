@@ -80,7 +80,6 @@ python "${CASUAL_ROOT}/scripts/infer_cogvideox_i2av_lora.py" \
   --train_data_root "${TRAIN_DATA_ROOT}" \
   --lora_dir "${CHECKPOINT_DIR}" \
   --output_dir "${OUTPUT_DIR}" \
-  --state_norm_stats "${STATE_NORM_STATS}" \
   --track_norm_stats "${TRAIN_DATA_ROOT}/track_norm_stats.pt" \
   --height 480 --width 640 --fps 8 --num_frames 49 \
   --num_samples "${NUM_SAMPLES}" \

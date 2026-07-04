@@ -45,7 +45,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model_path", type=Path, required=True)
     parser.add_argument("--data_root", type=Path, required=True)
     parser.add_argument("--checkpoint", type=Path, action="append", required=True)
-    parser.add_argument("--state_norm_stats", type=Path, required=True)
+    parser.add_argument("--state_norm_stats", type=Path)
     parser.add_argument("--track_norm_stats", type=Path, required=True)
     parser.add_argument("--output_json", type=Path, required=True)
     parser.add_argument("--height", type=int, default=256)
@@ -105,6 +105,8 @@ def load_checkpoint(transformer: CogVideoXTransformer3DModel, s0_encoder: S0Enco
 
 def main() -> int:
     args = parse_args()
+    if args.s0_cond_tokens > 0 and args.state_norm_stats is None:
+        raise ValueError("--state_norm_stats is required when --s0_cond_tokens > 0.")
     device = torch.device(args.device if torch.cuda.is_available() else "cpu")
     weight_dtype = torch.bfloat16
 

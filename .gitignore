@@ -24,8 +24,6 @@ coaf_dataset_24_25/**
 !coaf_dataset_24_25/composed/v6_depth_track_rgb_640x480_from_640_local_paths/.gitkeep
 !coaf_dataset_24_25/composed/v6_depth_track_rgb_640x480_one_sample_overfit/
 !coaf_dataset_24_25/composed/v6_depth_track_rgb_640x480_one_sample_overfit/.gitkeep
-!coaf_dataset_24_25/state_norm_stats.pt.placeholder
-!coaf_dataset_24_25/action_norm_stats.pt.placeholder
 
 # Large model/data file types
 *.safetensors

@@ -21,8 +21,6 @@ export PYTHON="${PYTHON:-/mnt/disk1/sunkai/miniconda3/envs/coaf_train/bin/python
 export FULL_640_DATA_ROOT="${FULL_640_DATA_ROOT:-${PROJECT_ROOT}/coaf_dataset_24_25/composed/v6_depth_track_rgb_640x480_from_640_local_paths}"
 export ONE_SAMPLE_640_DATA_ROOT="${ONE_SAMPLE_640_DATA_ROOT:-${PROJECT_ROOT}/coaf_dataset_24_25/composed/v6_depth_track_rgb_640x480_one_sample_overfit}"
 export MODEL_PATH="${MODEL_PATH:-${CASUAL_ROOT}/models/CogVideoX-5b-I2V}"
-export STATE_NORM_STATS="${STATE_NORM_STATS:-${PROJECT_ROOT}/coaf_dataset_24_25/state_norm_stats.pt}"
-export ACTION_NORM_STATS="${ACTION_NORM_STATS:-${PROJECT_ROOT}/coaf_dataset_24_25/action_norm_stats.pt}"
 
 export HEIGHT=480
 export WIDTH=640
